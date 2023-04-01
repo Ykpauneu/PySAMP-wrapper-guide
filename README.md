@@ -340,3 +340,64 @@ class DynamicActor:
 ```
 
 Here, in addition to returning the id of the created actor to the class, we also return `x`, `y`, `z`, `rotation`, `health`. At the moment this is one of the easiest, if not the only way to avoid pass-by-reference.
+
+### Callbacks
+
+Almost all plugins have their own callbacks, you need to register them, for this there is a built-in function `register_callback()`. Let's break it down.
+
+```python
+from pysamp import register_callback
+
+def register_callback(name: str, arguments: str):
+    ...
+```
+
+The name argument is the name of our callback, and arguments are the arguments it takes.
+
+For example, there is a callback `CA_OnGameModeExit()`, let's try to wrap it.
+
+```python
+# */colandreas/__init__.py
+...
+def register_callback("CA_OnGameModeExit", "")
+```
+
+We pass an empty string since this callback requires no arguments. But this is not always the case, the table below shows the designation and type of data.
+
+| Format    | Type      |
+|---------|-------------|
+| `b`   | `bool`       |
+| `s` | `string`         |
+| `i/d` | `int`        |
+| `f`      | `float` |
+
+For example, there is a callback (taken from another plugin) `forward Streamer_OnPluginError(const error[]);`. Since you already know that `const error[]` -> `error: str`, it becomes clear that you will need to use `s` format. Let's try.
+
+```python
+def register_callback("Streamer_OnPluginError", "s")
+```
+
+Nothing complicated, I also recommend creating a separate function and registering callbacks in it.
+
+```python
+# */colandreas/__init__.py
+...
+def register_callbacks():
+    register_callback("CA_OnGameModeExit", "")
+    ...
+```
+
+The `register_callbacks()` function must be called in `@on_gamemode_init`.
+
+```python
+from pysamp import on_gamemode_init
+from pycolandreas import register_callbacks
+...
+
+@on_gamemode_init
+def on_init():
+    register_callbacks()
+    ...
+```
+
+# LEFT: @event, credits
