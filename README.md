@@ -163,3 +163,108 @@ def on_init():
     index = col_andreas_create_object()
     col_andreas_delete_object(index)
 ```
+
+As you can see it's pretty simple.
+
+You will often encounter different types of data, so without explaining them all, here is a simple table.
+
+| Pawn    | Python      |
+|---------|-------------|
+| `Float`   | `float`       |
+| `Integer` | `int`         |
+| `Boolean` | `bool`        |
+| `[]`      | `str or list` |
+
+Examples will be just below.
+
+```
+Float: x => x: float
+Integer: x => x: int
+Boolean: x => x: bool
+type[] => x: str
+types[] => x: list
+```
+
+Notice the difference between `str` and `list`. When you write your own wrapper, you can easily notice where str and list are used.
+
+### OOP
+
+Now you will learn how to work with OOP. In fact, there is nothing complicated, we have already done a wrapper for two functions, the same functions we are going to use now. First, let's create a file, call it `caobject.py` (`*/pycolandreas/caobject.py`) to make it clearer to you.
+
+Now create a class, name it whatever you like, I'll call it `CAObject()` to avoid confusion with `pysamp.object.Object`.
+
+
+```python
+# */pycolandreas/caobject.py
+from pycolandreas import (
+    col_andreas_create_object,
+    col_andreas_delete_object
+)
+
+class CAObject():
+    def __init__(self, index):
+        self.index = index
+
+```
+# NOT FINISHED
+
+### Pass by refenrce
+
+Some functions take an argument with a `&` (`&Float: x`, etc.) sign. I will now tell you how to work with them. PySAMP does not currently have any support for pass-by-refernce.
+
+Many modules have functions whose value we can "save" to avoid pass-by-refernce. To make it as clear as possible, look at the [PySAMP-streamer](https://github.com/pysamp/PySAMP-streamer) wrapper.
+
+```python
+class DynamicActor:
+    def __init__(
+        self, id, x=None, y=None, z=None, rotation=None, health=None
+    ) -> None:
+        self.id = id
+        self._x = x
+        self._y = y
+        self._z = z
+        self._rotation = rotation
+        self._health = health
+
+    @classmethod
+    def create(
+        cls,
+        model_id: int,
+        x: float,
+        y: float,
+        z: float,
+        rotation: float,
+        invulnerable: bool = True,
+        health: float = 100.0,
+        world_id: int = -1,
+        interior_id: int = -1,
+        player_id: int = -1,
+        stream_distance: float = 200.0,
+        area_id: int = -1,
+        priority: int = 0,
+    ) -> "DynamicActor":
+        return cls(
+            create_dynamic_actor(
+                model_id,
+                x,
+                y,
+                z,
+                rotation,
+                invulnerable,
+                health,
+                world_id,
+                interior_id,
+                player_id,
+                stream_distance,
+                area_id,
+                priority,
+            ),
+            x,
+            y,
+            z,
+            rotation,
+            health,
+        )
+```
+
+Here, in addition to returning the id of the created actor to the class, we also return `x`, `y`, `z`, `rotation`, `health`. At the moment this is one of the easiest, if not the only way to avoid pass-by-reference.
