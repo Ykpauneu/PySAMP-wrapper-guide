@@ -204,9 +204,81 @@ from pycolandreas import (
 class CAObject():
     def __init__(self, index):
         self.index = index
-
 ```
-# NOT FINISHED
+
+Now let's create a function that will create an object. We will also need to change its name to be `CAObject.create()`, because `CAObject.create_object()` makes no sense.
+
+```python
+# */pycolandreas/caobject.py
+...
+    @classmethod
+    def create(
+        cls,
+        model_id: int,
+        x: float,
+        y: float,
+        z: float,
+        rotation_x: float,
+        rotation_y: float,
+        rotation_z: float,
+        add: bool = False
+    ):
+    return cls(col_andreas_create_object)
+```
+
+You end up with the following code.
+
+```python
+# */pycolandreas/caobject.py
+from pycolandreas import (
+    col_andreas_create_object,
+    col_andreas_delete_object
+)
+
+class CAObject():
+    def __init__(self, index):
+        self.index = index
+
+    @classmethod
+    def create(
+        cls,
+        model_id: int,
+        x: float,
+        y: float,
+        z: float,
+        rotation_x: float,
+        rotation_y: float,
+        rotation_z: float,
+        add: bool = False
+    ):
+    return cls(col_andreas_create_object)
+```
+
+Now our `index` is **1**, we can write a second function to delete the object.
+
+```python
+# */pycolandreas/caobject.py
+...
+
+    def delete(self):
+        return col_andreas_delete_object(self.index)
+```
+
+Now if we want to create an object in the main file (`*/python/__init__.py`), we have to write:
+
+```python
+# */python/__init__.py
+from pysamp import on_gamemode_init
+from pycolandreas.caobject import CAObject
+
+@on_gamemode_init
+def on_init():
+    ca_object = CAObject.create(...)
+```
+
+It's not hard, is it? In short, here is your procedure:
+1. Wrap functions in `__init__.py` using `call_native_function()`
+2. Make classes and write functions that will call wrapped functions from `__init__.py`.
 
 ### Pass by refenrce
 
