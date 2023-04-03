@@ -223,7 +223,17 @@ Now let's create a function that will create an object. We will also need to cha
         rotation_z: float,
         add: bool = False
     ):
-    return cls(col_andreas_create_object)
+    return cls(
+        col_andreas_create_object(
+            model_id,
+            x,
+            y,
+            z,
+            rotation_x,
+            rotation_y,
+            rotation_z
+        )
+    )
 ```
 
 You end up with the following code.
@@ -343,7 +353,7 @@ Here, in addition to returning the id of the created actor to the class, we also
 
 ### Callbacks
 
-Almost all plugins have their own callbacks, you need to register them, for this there is a built-in function `register_callback()`. Let's break it down.
+Almost all plugins have their own callbacks, you need to register them, for this there is a built-in function `register_callback()`. Let's break it down. Import `register_callback()` from `pysamp` module
 
 ```python
 from pysamp import register_callback
