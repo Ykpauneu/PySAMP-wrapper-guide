@@ -409,5 +409,3 @@ def on_init():
     register_callbacks()
     ...
 ```
-
-# LEFT: @event, credits
